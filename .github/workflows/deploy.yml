@@ -3,11 +3,19 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "10 1 * * *"
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Download latest release
+        run: |
+          curl -sL -o pages.zip https://github.com/byJoey/cfnew/releases/latest/download/Pages.zip
+          unzip -o pages.zip -d release_dir
+          find release_dir -name "_worker.js" -exec cp {} ./_worker.js \;
+          ls -la _worker.js
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
