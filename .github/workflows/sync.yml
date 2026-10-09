@@ -1,0 +1,23 @@
+name: Upstream Sync
+permissions:
+  contents: write
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          upstream_sync_repo: byJoey/cfnew
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Sync check
+        if: failure()
+        run: echo "[Error] 上游 workflow 文件有变更导致自动同步暂停，请到 GitHub 手动 Sync Fork 一次"
