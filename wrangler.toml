@@ -1,0 +1,7 @@
+name = "cfn19970116"
+main = "_worker.js"
+compatibility_date = "2026-01-20"
+
+[[kv_namespaces]]
+binding = "C"
+id = "14b8ae56ee634415a11f0a0e885ede84"
